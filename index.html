@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* --- Глобальные переменные и основные стили --- */
         :root {
             --color-primary-amber: #F59E0B; 
             --color-primary-amber-darker: #D97706; 
@@ -27,8 +28,15 @@
             background-color: var(--color-bg-darkest);
             color: var(--color-text-primary);
             overflow-x: hidden; 
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
         }
 
+        body.loaded {
+            opacity: 1;
+        }
+
+        /* --- Анимации и эффекты --- */
         .animated-hero-bg {
             background: linear-gradient(145deg, var(--color-bg-dark) 10%, var(--color-bg-darkest) 50%, #05080D 90%);
             background-size: 200% 200%;
@@ -75,6 +83,7 @@
             100% { transform: scale(1) translate(0,0) rotate(0deg); opacity: 0.5; }
         }
 
+        /* --- Стили секций и кнопок --- */
         .section-bg { background-color: var(--color-bg-medium); }
         .section-bg-alt { background-color: var(--color-bg-dark); }
 
@@ -83,10 +92,15 @@
             transition: var(--transition-smooth); box-shadow: 0 5px 18px rgba(245, 158, 11, 0.25);
             font-weight: 600;
         }
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background-color: var(--color-primary-amber-darker); transform: translateY(-4px) scale(1.03);
             box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35);
         }
+        .btn-primary:disabled {
+            background-color: var(--color-bg-light); color: var(--color-text-secondary); cursor: not-allowed;
+            box-shadow: none; transform: none;
+        }
+
         .btn-secondary {
             background-color: transparent; border: 2px solid var(--color-primary-amber); color: var(--color-primary-amber);
             transition: var(--transition-smooth); font-weight: 600;
@@ -96,6 +110,7 @@
             transform: translateY(-3px); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.25);
         }
         
+        /* --- Навигация --- */
         .nav-link {
             position: relative; transition: color 0.3s ease-out; padding: 0.25rem 0.25rem; 
             color: var(--color-text-secondary);
@@ -108,6 +123,7 @@
         }
         .nav-link:hover::after { width: 100%; }
         
+        /* --- Копирование адреса --- */
         .copy-btn-feedback { 
             position: absolute; bottom: 120%; left: 50%;
             transform: translateX(-50%) translateY(10px); 
@@ -118,6 +134,7 @@
         }
         .copy-btn-feedback.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         
+        /* --- Интерактивный логотип --- */
         .hero-logo-container {
             width: 200px; height: 280px; margin: 0 auto 3rem auto;
             position: relative; cursor: none; perspective: 800px;
@@ -139,6 +156,7 @@
             background-color: var(--color-primary-amber-lighter);
             border-radius: 50%; box-shadow: inset 0 -3px 5px rgba(0,0,0,0.2);
             display: flex; align-items: center; justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .eye-left { top: 50%; left: 25%; } 
         .eye-right { top: 50%; right: 25%;} 
@@ -165,6 +183,7 @@
             opacity: 0; 
         }
 
+        /* --- Карточки и интерактивные элементы --- */
         .card {
             background-color: var(--color-bg-medium); border: 1px solid var(--color-bg-light);
             transition: transform 0.35s var(--transition-smooth), box-shadow 0.35s var(--transition-smooth), border-color 0.35s var(--transition-smooth);
@@ -194,6 +213,7 @@
         }
         .animate-on-scroll.animated { opacity: 1; transform: translateY(0); }
 
+        /* --- Интерактивные двери --- */
         .two-doors-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 1rem; }
         .interactive-door {
             width: 140px; height: 210px; 
@@ -248,6 +268,7 @@
         }
         .door-title { font-weight: 700; margin-bottom: 0.3rem; color: var(--color-primary-amber-lighter); }
 
+        /* --- Оракул --- */
         #nlpOracle input::placeholder { color: var(--color-text-secondary); opacity: 0.8; }
         #nlpOracle input, #nlpOracle button { border-radius: 0.5rem; }
         #nlpOracle input {
@@ -280,6 +301,7 @@
         #shareOracleResponse.visible { opacity: 1; pointer-events: auto; }
         #shareOracleResponse:hover { background-color: var(--color-primary-amber-darker); }
 
+        /* --- Токеномика --- */
         .tokenomics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
         .tokenomic-item {
             background-color: var(--color-bg-dark); 
@@ -309,7 +331,7 @@
         }
         .tokenomics-vision h4 { color: var(--color-primary-amber-lighter); }
 
-        /* Новые стили для кнопок кошельков и бирж */
+        /* --- Ссылки на кошельки и биржи --- */
         .external-link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; } 
         .compact-link-btn {
             display: inline-block; padding: 0.5rem 0.75rem; 
@@ -351,7 +373,7 @@
 
         .exchange-btn { 
             transition: transform 0.2s ease-out, box-shadow 0.4s ease-out, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out;
-             /* --exchange-glow-color is set by specific classes below */
+             /* --exchange-glow-color устанавливается классами ниже */
         }
         .exchange-btn:hover {
             transform: scale(1.06); 
@@ -360,7 +382,7 @@
         
         .exchange-binance { 
             background-color: #F0B90B;  color: #1E1E1E; border-color: #F0B90B; 
-            --exchange-glow-color: #F3C32C; /* glow color for animation */
+            --exchange-glow-color: #F3C32C; /* цвет свечения для анимации */
         }
         .exchange-binance:hover { background-color: #F3C32C; border-color: #F3C32C; color: black;}
 
@@ -381,6 +403,7 @@
             100% { box-shadow: 0 0 10px var(--exchange-glow-color), 0 0 20px var(--exchange-glow-color), inset 0 0 6px rgba(255,255,255,0.2); }
         }
 
+        /* --- Социальные кнопки --- */
         .social-btn {
             display: inline-flex; align-items: center; justify-content: center;
             padding: 0.7rem 1.5rem; border-radius: 0.5rem; 
@@ -388,25 +411,23 @@
             transition: var(--transition-smooth);
             gap: 0.6rem; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            /* New hover effects for social buttons */
         }
         .social-btn:hover {
             transform: translateY(-2px) scale(1.03);
+            animation: socialNeonPulsate 1.5s infinite alternate;
         }
 
         .twitter-x-btn { background-color: #000; color: #fff; border: 1px solid #333; --social-glow-color: rgba(255,255,255,0.7); }
-        .twitter-x-btn:hover { background-color: #111; border-color: #444;  animation: socialNeonPulsate 1.5s infinite alternate; }
+        .twitter-x-btn:hover { background-color: #111; border-color: #444; }
         
         .telegram-btn { background-color: #2AABEE; color: #fff; border: 1px solid #1792cb; --social-glow-color: #72C2F0;}
-        .telegram-btn:hover { background-color: #1792cb; border-color: #1792cb; animation: socialNeonPulsate 1.5s infinite alternate; }
+        .telegram-btn:hover { background-color: #1792cb; border-color: #1792cb; }
         .telegram-btn svg path { fill: #fff; }
 
         @keyframes socialNeonPulsate {
              0% { box-shadow: 0 0 3px var(--social-glow-color), 0 0 5px var(--social-glow-color), inset 0 0 2px rgba(255,255,255,0.1); }
             100% { box-shadow: 0 0 7px var(--social-glow-color), 0 0 12px var(--social-glow-color), inset 0 0 4px rgba(255,255,255,0.15); }
         }
-
-
     </style>
 </head>
 <body class="antialiased">
@@ -433,7 +454,7 @@
                 <a href="https://pump.fun/" target="_blank" rel="noopener noreferrer" class="btn-primary px-4 py-2 lg:px-6 lg:py-2.5 rounded-lg text-xs lg:text-sm">BUY $DOOR</a> 
             </nav>
             <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-slate-300 hover:text-amber-400 focus:outline-none p-1.5 -mr-1.5"> 
+                <button id="mobile-menu-button" class="text-slate-300 hover:text-amber-400 focus:outline-none p-1.5 -mr-1.5" aria-label="Open menu"> 
                     <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </div>
@@ -449,249 +470,259 @@
         </div>
     </header>
 
-    <section id="hero" class="animated-hero-bg min-h-screen flex items-center justify-center py-20 sm:py-28 px-4">
-        <div id="particles-js-bg" class="particles-bg"></div> 
-        <div class="hero-glow-shapes">
-            <div class="hero-glow-shape shape1"></div>
-            <div class="hero-glow-shape shape2"></div>
-            <div class="hero-glow-shape shape3"></div>
-        </div>
-        <div class="container mx-auto text-center relative z-10">
-            <div id="heroLogoContainer" class="hero-logo-container group">
-                <div id="heroLogoDoor" class="hero-logo-door">
-                    <div class="hero-logo-eye-container">
-                        <div id="heroEyeLeft" class="hero-logo-eye eye-left">
-                            <div id="heroPupilLeft" class="hero-logo-pupil"></div>
+    <main>
+        <section id="hero" class="animated-hero-bg min-h-screen flex items-center justify-center py-20 sm:py-28 px-4">
+            <div id="particles-js-bg" class="particles-bg"></div> 
+            <div class="hero-glow-shapes">
+                <div class="hero-glow-shape shape1"></div>
+                <div class="hero-glow-shape shape2"></div>
+                <div class="hero-glow-shape shape3"></div>
+            </div>
+            <div class="container mx-auto text-center relative z-10">
+                <div id="heroLogoContainer" class="hero-logo-container group">
+                    <div id="heroLogoDoor" class="hero-logo-door">
+                        <div class="hero-logo-eye-container">
+                            <div id="heroEyeLeft" class="hero-logo-eye eye-left">
+                                <div id="heroPupilLeft" class="hero-logo-pupil"></div>
+                            </div>
+                            <div id="heroEyeRight" class="hero-logo-eye eye-right">
+                                <div id="heroPupilRight" class="hero-logo-pupil"></div>
+                            </div>
                         </div>
-                        <div id="heroEyeRight" class="hero-logo-eye eye-right">
-                            <div id="heroPupilRight" class="hero-logo-pupil"></div>
+                        <div class="hero-logo-knob"></div>
+                    </div>
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white mb-6 sm:mb-7 leading-tight animate-on-scroll">
+                    Where Will <span class="text-amber-400">$DOOR</span> Take You? <br class="hidden sm:block" />Choose Your Path.
+                </h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto mb-10 sm:mb-12 animate-on-scroll" style="animation-delay: 0.2s;">
+                    In a universe of infinite choices, $DOOR is your enigmatic guide. A memecoin masterfully fusing sophisticated humor with the universally cherished art of delightful indecision.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-5 md:space-x-7 mb-12 sm:mb-14 animate-on-scroll" style="animation-delay: 0.4s;">
+                    <a href="https://pump.fun/" target="_blank" rel="noopener noreferrer" class="btn-primary px-8 sm:px-10 md:px-12 py-4 sm:py-5 text-lg sm:text-xl rounded-xl shadow-2xl">
+                        Open Your First $DOOR (Buy on pump.fun)
+                    </a>
+                </div>
+
+                <div class="bg-slate-800/70 backdrop-blur-lg p-4 sm:p-5 md:p-7 rounded-xl sm:rounded-2xl max-w-sm sm:max-w-md lg:max-w-lg mx-auto shadow-2xl border border-slate-700/70 animate-on-scroll" style="animation-delay: 0.6s;">
+                    <label for="contractAddress" class="block text-sm sm:text-base font-medium text-slate-400 mb-1 sm:mb-2">Official $DOOR Contract Address (Solana):</label>
+                    <div class="relative flex items-center">
+                        <input type="text" id="contractAddress" value="8fCoYT242eGZ2S6cGu23a21aWvWph4y1a2b3c4d5e6f7" readonly class="w-full bg-slate-700 text-slate-100 border border-slate-600 rounded-lg sm:rounded-xl p-3 sm:p-4 pr-24 sm:pr-32 text-sm sm:text-base md:text-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none selection:bg-amber-500 selection:text-slate-800">
+                        <button class="copy-button absolute right-1.5 sm:right-2.5 btn-secondary px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base font-semibold rounded-md sm:rounded-lg" data-target="contractAddress">
+                            Copy
+                            <span class="copy-btn-feedback">Copied!</span>
+                        </button>
+                    </div>
+                </div>
+                 <p class="mt-8 sm:mt-10 text-sm sm:text-base text-slate-400 animate-on-scroll" style="animation-delay: 0.8s;">Swing the trade, HODL the shade! Every choice is a new <span class="font-semibold text-amber-400">$DOOR</span>way.</p>
+            </div>
+        </section>
+
+        <section id="concept" class="py-20 md:py-28 px-4 section-bg-alt">
+            <div class="container mx-auto">
+                <div class="text-center mb-14 md:mb-20 animate-on-scroll">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-5">Our Dilemma: The Philosophy of <span class="text-amber-400">$DOOR</span></h2>
+                    <p class="text-xl text-slate-300 max-w-3xl mx-auto">More than a token, it's a mirror to our choices. A witty acknowledgment of life's crossroads, the elegance of hesitation, and the communal chuckle at our beautifully shared indecisions.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 md:gap-10">
+                    <div class="card p-6 md:p-8 rounded-xl shadow-xl text-center animate-on-scroll group">
+                        <div class="card-icon-container w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 text-amber-500 flex items-center justify-center">
+                            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
                         </div>
+                        <h3 class="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">The Art of the Question</h3>
+                        <p class="text-slate-400 text-base md:text-lg">Why rush certainty? $DOOR celebrates the profound pause, the delightful "Hmm...", the intellectual tango before any momentous (or amusingly trivial) commitment is made.</p>
                     </div>
-                    <div class="hero-logo-knob"></div>
-                </div>
-            </div>
-
-            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white mb-6 sm:mb-7 leading-tight animate-on-scroll">
-                Where Will <span class="text-amber-400">$DOOR</span> Take You? <br class="hidden sm:block" />Choose Your Path.
-            </h1>
-            <p class="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto mb-10 sm:mb-12 animate-on-scroll" style="animation-delay: 0.2s;">
-                In a universe of infinite choices, $DOOR is your enigmatic guide. A memecoin masterfully fusing sophisticated humor with the universally cherished art of delightful indecision.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-5 md:space-x-7 mb-12 sm:mb-14 animate-on-scroll" style="animation-delay: 0.4s;">
-                <a href="https://pump.fun/" target="_blank" rel="noopener noreferrer" class="btn-primary px-8 sm:px-10 md:px-12 py-4 sm:py-5 text-lg sm:text-xl rounded-xl shadow-2xl">
-                    Open Your First $DOOR (Buy on pump.fun)
-                </a>
-            </div>
-
-            <div class="bg-slate-800/70 backdrop-blur-lg p-4 sm:p-5 md:p-7 rounded-xl sm:rounded-2xl max-w-sm sm:max-w-md lg:max-w-lg mx-auto shadow-2xl border border-slate-700/70 animate-on-scroll" style="animation-delay: 0.6s;">
-                <label for="contractAddress" class="block text-sm sm:text-base font-medium text-slate-400 mb-1 sm:mb-2">Official $DOOR Contract Address (Solana):</label>
-                <div class="relative flex items-center">
-                    <input type="text" id="contractAddress" value="YOUR_ACTUAL_CONTRACT_ADDRESS_HERE_SOON" readonly class="w-full bg-slate-700 text-slate-100 border border-slate-600 rounded-lg sm:rounded-xl p-3 sm:p-4 pr-24 sm:pr-32 text-sm sm:text-base md:text-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none selection:bg-amber-500 selection:text-slate-800">
-                    <button onclick="copyAddress('contractAddress', this)" class="absolute right-1.5 sm:right-2.5 btn-secondary px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base font-semibold rounded-md sm:rounded-lg">
-                        Copy
-                        <span class="copy-btn-feedback">Copied!</span>
-                    </button>
-                </div>
-            </div>
-             <p class="mt-8 sm:mt-10 text-sm sm:text-base text-slate-400 animate-on-scroll" style="animation-delay: 0.8s;">Swing the trade, HODL the shade! Every choice is a new <span class="font-semibold text-amber-400">$DOOR</span>way.</p>
-        </div>
-    </section>
-
-    <section id="concept" class="py-20 md:py-28 px-4 section-bg-alt">
-        <div class="container mx-auto">
-            <div class="text-center mb-14 md:mb-20 animate-on-scroll">
-                <h2 class="text-4xl md:text-5xl font-bold text-white mb-5">Our Dilemma: The Philosophy of <span class="text-amber-400">$DOOR</span></h2>
-                <p class="text-xl text-slate-300 max-w-3xl mx-auto">More than a token, it's a mirror to our choices. A witty acknowledgment of life's crossroads, the elegance of hesitation, and the communal chuckle at our beautifully shared indecisions.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8 md:gap-10">
-                <div class="card p-6 md:p-8 rounded-xl shadow-xl text-center animate-on-scroll group">
-                    <div class="card-icon-container w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 text-amber-500 flex items-center justify-center">
-                        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
-                    </div>
-                    <h3 class="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">The Art of the Question</h3>
-                    <p class="text-slate-400 text-base md:text-lg">Why rush certainty? $DOOR celebrates the profound pause, the delightful "Hmm...", the intellectual tango before any momentous (or amusingly trivial) commitment is made.</p>
-                </div>
-                <div class="card p-6 md:p-8 rounded-xl shadow-xl text-center animate-on-scroll group" style="animation-delay: 0.2s;">
-                    <div class="card-icon-container w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 text-amber-500 flex items-center justify-center">
-                        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m0-6l-3 3m0 0l3 3m-3-3H2.25m10.5-6H21M7.5 3v18" /></svg>
-                    </div>
-                    <h3 class="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">Portals to Possibility</h3>
-                    <p class="text-slate-400 text-base md:text-lg">Each $DOOR isn't an exit, but an intriguing entry. A token unlocking a community that cherishes the voyage of decision-making, not merely the destination.</p>
-                </div>
-                <div class="card p-6 md:p-8 rounded-xl shadow-xl text-center animate-on-scroll group" style="animation-delay: 0.4s;">
-                    <div class="card-icon-container w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 text-amber-500 flex items-center justify-center">
-                        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25M6 12h12" /></svg>
-                    </div>
-                    <h3 class="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">The Savvy Stutter-Step</h3>
-                    <p class="text-slate-400 text-base md:text-lg">We champion wit, introspection, and the exquisitely absurd. This is premium memery for the crypto connoisseur with a refined taste for intellectual humor and elegant design.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="interactive-choice" class="py-20 md:py-28 px-4 section-bg">
-         <div class="container mx-auto">
-            <div class="text-center mb-14 md:mb-20 animate-on-scroll">
-                <h2 class="text-4xl md:text-5xl font-bold text-white mb-5">Choose Your Dilemma... <span class="text-amber-400">Wisely?</span></h2>
-                <p class="text-xl text-slate-300 max-w-3xl mx-auto">Two enigmatic doors stand before you. Behind each, a fragment of wisdom, a dash of delightful absurdity, or perhaps... just another compelling question. What will it be?</p>
-            </div>
-            <div class="two-doors-container mb-16 md:mb-20 animate-on-scroll" style="animation-delay: 0.2s;">
-                <div id="door1" class="interactive-door">
-                    <div class="door-panel flex items-center justify-center text-4xl sm:text-5xl font-bold text-amber-400">A
-                        <div class="door-knob"></div> 
-                    </div>
-                    <div class="door-content-wrapper">
-                        <div class="door-content">
-                            <p class="door-title text-base sm:text-lg">Door A Contemplates:</p>
-                            <p id="door1-wisdom" class="text-xs sm:text-sm md:text-base">"The path of least resistance often leads to the least interesting views. But hey, it's comfy!"</p>
+                    <div class="card p-6 md:p-8 rounded-xl shadow-xl text-center animate-on-scroll group" style="animation-delay: 0.2s;">
+                        <div class="card-icon-container w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 text-amber-500 flex items-center justify-center">
+                            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m0-6l-3 3m0 0l3 3m-3-3H2.25m10.5-6H21M7.5 3v18" /></svg>
                         </div>
+                        <h3 class="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">Portals to Possibility</h3>
+                        <p class="text-slate-400 text-base md:text-lg">Each $DOOR isn't an exit, but an intriguing entry. A token unlocking a community that cherishes the voyage of decision-making, not merely the destination.</p>
+                    </div>
+                    <div class="card p-6 md:p-8 rounded-xl shadow-xl text-center animate-on-scroll group" style="animation-delay: 0.4s;">
+                        <div class="card-icon-container w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 text-amber-500 flex items-center justify-center">
+                            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25M6 12h12" /></svg>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">The Savvy Stutter-Step</h3>
+                        <p class="text-slate-400 text-base md:text-lg">We champion wit, introspection, and the exquisitely absurd. This is premium memery for the crypto connoisseur with a refined taste for intellectual humor and elegant design.</p>
                     </div>
                 </div>
-                <div id="door2" class="interactive-door">
-                    <div class="door-panel flex items-center justify-center text-4xl sm:text-5xl font-bold text-amber-400">B
-                         <div class="door-knob"></div> 
-                    </div>
-                     <div class="door-content-wrapper">
-                        <div class="door-content">
-                            <p class="door-title text-base sm:text-lg">Door B Ponders:</p>
-                            <p id="door2-wisdom" class="text-xs sm:text-sm md:text-base">"To choose is to lose all other options. Or is it to gain one unique story? $DOOR ponders."</p>
+            </div>
+        </section>
+
+        <section id="interactive-choice" class="py-20 md:py-28 px-4 section-bg">
+             <div class="container mx-auto">
+                <div class="text-center mb-14 md:mb-20 animate-on-scroll">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-5">Choose Your Dilemma... <span class="text-amber-400">Wisely?</span></h2>
+                    <p class="text-xl text-slate-300 max-w-3xl mx-auto">Two enigmatic doors stand before you. Behind each, a fragment of wisdom, a dash of delightful absurdity, or perhaps... just another compelling question. What will it be?</p>
+                </div>
+                <div class="two-doors-container mb-16 md:mb-20 animate-on-scroll" style="animation-delay: 0.2s;">
+                    <div id="door1" class="interactive-door">
+                        <div class="door-panel flex items-center justify-center text-4xl sm:text-5xl font-bold text-amber-400">A
+                            <div class="door-knob"></div> 
+                        </div>
+                        <div class="door-content-wrapper">
+                            <div class="door-content">
+                                <p class="door-title text-base sm:text-lg">Door A Contemplates:</p>
+                                <p id="door1-wisdom" class="text-xs sm:text-sm md:text-base">"The path of least resistance often leads to the least interesting views. But hey, it's comfy!"</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div id="nlpOracle" class="max-w-xl mx-auto card p-6 md:p-8 lg:p-10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl animate-on-scroll" style="animation-delay: 0.4s;">
-                <h3 class="text-2xl md:text-3xl font-semibold text-white mb-4 md:mb-5 text-center">Consult the Oracle Door</h3>
-                <p class="text-slate-300 mb-5 md:mb-6 text-center text-base md:text-lg">Have a pressing, yet amusingly trivial, dilemma? Whisper it to the Oracle Door. It might offer... clarity? Or $DOOR.</p>
-                <input type="text" id="userDilemma" placeholder="e.g., 'Coffee or tea to face this new dilemma?'" class="w-full bg-slate-700 text-slate-100 border border-slate-600 rounded-lg p-3 md:p-4 mb-3 md:mb-4 text-base md:text-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none selection:bg-amber-500 selection:text-slate-800">
-                <button id="askOracleButton" class="btn-primary w-full py-3 md:py-4 rounded-lg text-base md:text-lg font-semibold">Ask the Oracle</button>
-                <div id="oracleResponseContainer" class="mt-5 md:mt-6">
-                    <div id="oracleResponse" class="text-slate-200 text-base md:text-lg p-3 md:p-4 rounded-lg bg-slate-700/60 border border-slate-600 min-h-[60px] md:min-h-[70px] flex items-center justify-center text-center">
-                        The Oracle Door awaits your query...
+                    <div id="door2" class="interactive-door">
+                        <div class="door-panel flex items-center justify-center text-4xl sm:text-5xl font-bold text-amber-400">B
+                             <div class="door-knob"></div> 
+                        </div>
+                         <div class="door-content-wrapper">
+                            <div class="door-content">
+                                <p class="door-title text-base sm:text-lg">Door B Ponders:</p>
+                                <p id="door2-wisdom" class="text-xs sm:text-sm md:text-base">"To choose is to lose all other options. Or is it to gain one unique story? $DOOR ponders."</p>
+                            </div>
+                        </div>
                     </div>
-                    <button id="shareOracleResponse" class="hidden">Share on X</button>
+                </div>
+                <div id="nlpOracle" class="max-w-xl mx-auto card p-6 md:p-8 lg:p-10 rounded-xl md:rounded-2xl shadow-xl md:shadow-2xl animate-on-scroll" style="animation-delay: 0.4s;">
+                    <h3 class="text-2xl md:text-3xl font-semibold text-white mb-4 md:mb-5 text-center">Consult the Oracle Door</h3>
+                    <p class="text-slate-300 mb-5 md:mb-6 text-center text-base md:text-lg">Have a pressing, yet amusingly trivial, dilemma? Whisper it to the Oracle Door. It might offer... clarity? Or $DOOR.</p>
+                    <input type="text" id="userDilemma" placeholder="e.g., 'Coffee or tea to face this new dilemma?'" class="w-full bg-slate-700 text-slate-100 border border-slate-600 rounded-lg p-3 md:p-4 mb-3 md:mb-4 text-base md:text-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none selection:bg-amber-500 selection:text-slate-800">
+                    <button id="askOracleButton" class="btn-primary w-full py-3 md:py-4 rounded-lg text-base md:text-lg font-semibold">Ask the Oracle</button>
+                    <div id="oracleResponseContainer" class="mt-5 md:mt-6">
+                        <div id="oracleResponse" class="text-slate-200 text-base md:text-lg p-3 md:p-4 rounded-lg bg-slate-700/60 border border-slate-600 min-h-[60px] md:min-h-[70px] flex items-center justify-center text-center" aria-live="polite">
+                            The Oracle Door awaits your query...
+                        </div>
+                        <button id="shareOracleResponse" class="hidden" aria-label="Share Oracle's response on X">Share on X</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="tokenomics" class="py-20 md:py-28 px-4 section-bg-alt">
-        <div class="container mx-auto">
-            <div class="text-center mb-14 md:mb-20 animate-on-scroll">
-                <h2 class="text-4xl md:text-5xl font-bold text-white mb-5">$DOOR Token Details: The Blueprint of Indecision</h2>
-                <p class="text-xl text-slate-300 max-w-3xl mx-auto">Behold, the architecture of $DOOR. Crafted with wit, designed for the community, and poised for contemplation.</p>
-            </div>
-            <div class="max-w-4xl mx-auto animate-on-scroll" style="animation-delay: 0.2s;">
-                <div class="tokenomics-grid mb-8">
-                    <div class="tokenomic-item">
-                        <div class="tokenomic-value">1B</div>
-                        <div class="tokenomic-label">Total Supply</div>
-                        <p class="tokenomic-description">A billion $DOORs, one for every shade of "maybe" the universe can offer.</p>
+        <section id="tokenomics" class="py-20 md:py-28 px-4 section-bg-alt">
+            <div class="container mx-auto">
+                <div class="text-center mb-14 md:mb-20 animate-on-scroll">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-5">$DOOR Token Details: The Blueprint of Indecision</h2>
+                    <p class="text-xl text-slate-300 max-w-3xl mx-auto">Behold, the architecture of $DOOR. Crafted with wit, designed for the community, and poised for contemplation.</p>
+                </div>
+                <div class="max-w-4xl mx-auto animate-on-scroll" style="animation-delay: 0.2s;">
+                    <div class="tokenomics-grid mb-8">
+                        <div class="tokenomic-item">
+                            <div class="tokenomic-value">1B</div>
+                            <div class="tokenomic-label">Total Supply</div>
+                            <p class="tokenomic-description">A billion $DOORs, one for every shade of "maybe" the universe can offer.</p>
+                        </div>
+                        <div class="tokenomic-item">
+                            <div class="tokenomic-value">$DOOR</div>
+                            <div class="tokenomic-label">Symbol</div>
+                            <p class="tokenomic-description">The unmistakable ticker for those who trade in thoughts and HODL on humor.</p>
+                        </div>
+                        <div class="tokenomic-item col-span-1 md:col-span-2"> 
+                            <div class="tokenomic-value">Community</div>
+                            <div class="tokenomic-label">Core Focus</div>
+                            <p class="tokenomic-description">Built for the Dilemmists, by the Dilemmists (with a little help from the Oracle Door itself).</p>
+                        </div>
                     </div>
-                    <div class="tokenomic-item">
-                        <div class="tokenomic-value">$DOOR</div>
-                        <div class="tokenomic-label">Symbol</div>
-                        <p class="tokenomic-description">The unmistakable ticker for those who trade in thoughts and HODL on humor.</p>
-                    </div>
-                    <div class="tokenomic-item col-span-1 md:col-span-2"> 
-                        <div class="tokenomic-value">Community</div>
-                        <div class="tokenomic-label">Core Focus</div>
-                        <p class="tokenomic-description">Built for the Dilemmists, by the Dilemmists (with a little help from the Oracle Door itself).</p>
+                    <div class="tokenomics-vision">
+                        <h4 class="text-2xl font-bold text-white mb-3 text-center">The Grand (Indecisive) Vision</h4>
+                        <p class="text-lg text-slate-300 leading-relaxed text-center">"$DOOR isn't just a token; it's a movement. A sophisticated nod to the art of not deciding, wrapped in a layer of high-concept humor. We're building an ecosystem where wit is currency, paradoxes are celebrated, and every choice (or lack thereof) opens a new $DOOR to engagement. Join us, as we ponder the imponderable, one delightfully uncertain step at a time."</p>
                     </div>
                 </div>
-                <div class="tokenomics-vision">
-                    <h4 class="text-2xl font-bold text-white mb-3 text-center">The Grand (Indecisive) Vision</h4>
-                    <p class="text-lg text-slate-300 leading-relaxed text-center">"$DOOR isn't just a token; it's a movement. A sophisticated nod to the art of not deciding, wrapped in a layer of high-concept humor. We're building an ecosystem where wit is currency, paradoxes are celebrated, and every choice (or lack thereof) opens a new $DOOR to engagement. Join us, as we ponder the imponderable, one delightfully uncertain step at a time."</p>
-                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="how-to-buy" class="py-20 md:py-28 px-4 section-bg">
-        <div class="container mx-auto">
-            <div class="text-center mb-14 md:mb-20 animate-on-scroll">
-                <h2 class="text-4xl md:text-5xl font-bold text-white mb-5">Your Guide to Acquiring <span class="text-amber-400">$DOOR</span></h2>
-                <p class="text-xl text-slate-300 max-w-3xl mx-auto">Ready to fully embrace the dilemma? Here's your meticulously crafted map to adding $DOOR tokens to your curated collection of digital curiosities.</p>
-            </div>
-            <div class="max-w-3xl mx-auto space-y-8 md:space-y-10">
-                <div class="card p-6 md:p-7 rounded-xl animate-on-scroll">
-                    <div class="flex flex-col md:flex-row items-center md:space-x-6">
-                        <div class="flex-shrink-0 text-4xl md:text-5xl font-extrabold text-amber-500 bg-slate-700/50 p-3 md:p-4 rounded-full w-16 h-16 md:w-20 md:h-20 flex items-center justify-center shadow-md mb-4 md:mb-0">1</div>
+        <section id="how-to-buy" class="py-20 md:py-28 px-4 section-bg">
+            <div class="container mx-auto">
+                <div class="text-center mb-14 md:mb-20 animate-on-scroll">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-5">Your Guide to Acquiring <span class="text-amber-400">$DOOR</span></h2>
+                    <p class="text-xl text-slate-300 max-w-3xl mx-auto">Ready to fully embrace the dilemma? Here's your meticulously crafted map to adding $DOOR tokens to your curated collection of digital curiosities.</p>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-8 md:space-y-10">
+                    <div class="card p-6 md:p-7 rounded-xl animate-on-scroll">
+                        <div class="flex flex-col md:flex-row items-center md:space-x-6">
+                            <div class="flex-shrink-0 text-4xl md:text-5xl font-extrabold text-amber-500 bg-slate-700/50 p-3 md:p-4 rounded-full w-16 h-16 md:w-20 md:h-20 flex items-center justify-center shadow-md mb-4 md:mb-0">1</div>
+                            <div class="text-center md:text-left flex-grow">
+                                <h3 class="text-xl md:text-2xl font-semibold text-white mb-2">Secure Your Portal (Wallets)</h3>
+                                <p class="text-slate-400 text-base md:text-lg mb-3">Equip yourself with a robust Solana-compatible wallet. Excellent choices include:</p>
+                            </div>
+                        </div>
+                        <div class="external-link-grid mt-4">
+                            <a href="https://phantom.app/" target="_blank" rel="noopener noreferrer" class="compact-link-btn wallet-btn">Phantom</a>
+                            <a href="https://solflare.com/" target="_blank" rel="noopener noreferrer" class="compact-link-btn wallet-btn">Solflare</a>
+                            <a href="https://www.backpack.app/" target="_blank" rel="noopener noreferrer" class="compact-link-btn wallet-btn">Backpack</a>
+                        </div>
+                    </div>
+                    <div class="card p-6 md:p-7 rounded-xl animate-on-scroll" style="animation-delay: 0.15s;">
+                         <div class="flex flex-col md:flex-row items-center md:space-x-6">
+                            <div class="flex-shrink-0 text-4xl md:text-5xl font-extrabold text-amber-500 bg-slate-700/50 p-3 md:p-4 rounded-full w-16 h-16 md:w-20 md:h-20 flex items-center justify-center shadow-md mb-4 md:mb-0">2</div>
+                            <div class="text-center md:text-left flex-grow">
+                                <h3 class="text-xl md:text-2xl font-semibold text-white mb-2">Fuel Your Journey (Acquire SOL)</h3>
+                                <p class="text-slate-400 text-base md:text-lg mb-3">Procure SOL (Solana's native currency) from a trusted exchange and transfer it to your wallet. Consider exchanges like:</p>
+                            </div>
+                        </div>
+                        <div class="external-link-grid mt-4">
+                            <a href="https://www.binance.com/" target="_blank" rel="noopener noreferrer" class="compact-link-btn exchange-btn exchange-binance">Binance</a>
+                            <a href="https://www.bybit.com/" target="_blank" rel="noopener noreferrer" class="compact-link-btn exchange-btn exchange-bybit">Bybit</a>
+                            <a href="https://www.coinbase.com/" target="_blank" rel="noopener noreferrer" class="compact-link-btn exchange-btn exchange-coinbase">Coinbase</a>
+                        </div>
+                    </div>
+                    <div class="card p-6 md:p-7 rounded-xl flex flex-col md:flex-row items-center md:space-x-6 animate-on-scroll" style="animation-delay: 0.3s;">
+                         <div class="flex-shrink-0 text-4xl md:text-5xl font-extrabold text-amber-500 bg-slate-700/50 p-3 md:p-4 rounded-full w-16 h-16 md:w-20 md:h-20 flex items-center justify-center shadow-md mb-4 md:mb-0">3</div>
                         <div class="text-center md:text-left flex-grow">
-                            <h3 class="text-xl md:text-2xl font-semibold text-white mb-2">Secure Your Portal (Wallets)</h3>
-                            <p class="text-slate-400 text-base md:text-lg mb-3">Equip yourself with a robust Solana-compatible wallet. Excellent choices include:</p>
+                            <h3 class="text-xl md:text-2xl font-semibold text-white mb-2">Navigate to the Exchange (pump.fun)</h3>
+                            <p class="text-slate-400 text-base md:text-lg mb-3 md:mb-4">Venture forth to the digital marketplace known as <a href="https://pump.fun/" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:underline font-semibold">pump.fun</a>. Connect your wallet with utmost care. This is where new opportunities and $DOORs materialize.</p>
+                            <a href="https://pump.fun/" target="_blank" rel="noopener noreferrer" class="btn-primary inline-block px-6 md:px-8 py-2.5 md:py-3 rounded-lg text-base md:text-lg font-semibold mt-2">
+                                Visit pump.fun
+                            </a>
                         </div>
                     </div>
-                    <div class="external-link-grid mt-4">
-                        <a href="https://phantom.app/" target="_blank" rel="noopener noreferrer" class="compact-link-btn wallet-btn">Phantom</a>
-                        <a href="https://solflare.com/" target="_blank" rel="noopener noreferrer" class="compact-link-btn wallet-btn">Solflare</a>
-                        <a href="https://www.backpack.app/" target="_blank" rel="noopener noreferrer" class="compact-link-btn wallet-btn">Backpack</a>
-                    </div>
-                </div>
-                <div class="card p-6 md:p-7 rounded-xl animate-on-scroll" style="animation-delay: 0.15s;">
-                     <div class="flex flex-col md:flex-row items-center md:space-x-6">
-                        <div class="flex-shrink-0 text-4xl md:text-5xl font-extrabold text-amber-500 bg-slate-700/50 p-3 md:p-4 rounded-full w-16 h-16 md:w-20 md:h-20 flex items-center justify-center shadow-md mb-4 md:mb-0">2</div>
+                    <div class="card p-6 md:p-7 rounded-xl flex flex-col md:flex-row items-center md:space-x-6 animate-on-scroll" style="animation-delay: 0.45s;">
+                        <div class="flex-shrink-0 text-4xl md:text-5xl font-extrabold text-amber-500 bg-slate-700/50 p-3 md:p-4 rounded-full w-16 h-16 md:w-20 md:h-20 flex items-center justify-center shadow-md mb-4 md:mb-0">4</div>
                         <div class="text-center md:text-left flex-grow">
-                            <h3 class="text-xl md:text-2xl font-semibold text-white mb-2">Fuel Your Journey (Acquire SOL)</h3>
-                            <p class="text-slate-400 text-base md:text-lg mb-3">Procure SOL (Solana's native currency) from a trusted exchange and transfer it to your wallet. Consider exchanges like:</p>
-                        </div>
-                    </div>
-                    <div class="external-link-grid mt-4">
-                        <a href="https://www.binance.com/" target="_blank" rel="noopener noreferrer" class="compact-link-btn exchange-btn exchange-binance">Binance</a>
-                        <a href="https://www.bybit.com/" target="_blank" rel="noopener noreferrer" class="compact-link-btn exchange-btn exchange-bybit">Bybit</a>
-                        <a href="https://www.coinbase.com/" target="_blank" rel="noopener noreferrer" class="compact-link-btn exchange-btn exchange-coinbase">Coinbase</a>
-                    </div>
-                </div>
-                <div class="card p-6 md:p-7 rounded-xl flex flex-col md:flex-row items-center md:space-x-6 animate-on-scroll" style="animation-delay: 0.3s;">
-                     <div class="flex-shrink-0 text-4xl md:text-5xl font-extrabold text-amber-500 bg-slate-700/50 p-3 md:p-4 rounded-full w-16 h-16 md:w-20 md:h-20 flex items-center justify-center shadow-md mb-4 md:mb-0">3</div>
-                    <div class="text-center md:text-left flex-grow">
-                        <h3 class="text-xl md:text-2xl font-semibold text-white mb-2">Navigate to the Exchange (pump.fun)</h3>
-                        <p class="text-slate-400 text-base md:text-lg mb-3 md:mb-4">Venture forth to the digital marketplace known as <a href="https://pump.fun/" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:underline font-semibold">pump.fun</a>. Connect your wallet with utmost care. This is where new opportunities and $DOORs materialize.</p>
-                        <a href="https://pump.fun/" target="_blank" rel="noopener noreferrer" class="btn-primary inline-block px-6 md:px-8 py-2.5 md:py-3 rounded-lg text-base md:text-lg font-semibold mt-2">
-                            Visit pump.fun
-                        </a>
-                    </div>
-                </div>
-                <div class="card p-6 md:p-7 rounded-xl flex flex-col md:flex-row items-center md:space-x-6 animate-on-scroll" style="animation-delay: 0.45s;">
-                    <div class="flex-shrink-0 text-4xl md:text-5xl font-extrabold text-amber-500 bg-slate-700/50 p-3 md:p-4 rounded-full w-16 h-16 md:w-20 md:h-20 flex items-center justify-center shadow-md mb-4 md:mb-0">4</div>
-                    <div class="text-center md:text-left flex-grow">
-                        <h3 class="text-xl md:text-2xl font-semibold text-white mb-2">Seek, Find, and Acquire ($DOOR)</h3>
-                        <p class="text-slate-400 text-base md:text-lg mb-3">Use the official $DOOR contract address (provided below for your convenience) to locate the token on pump.fun. Execute the swap of your SOL for $DOOR, and officially, welcome to the Dilemma!</p>
-                         <div class="mt-3 md:mt-4">
-                            <label for="contractAddressHowToBuy" class="block text-xs sm:text-sm font-medium text-slate-400 mb-1">$DOOR Contract Address:</label>
-                            <div class="relative flex items-center">
-                                <input type="text" id="contractAddressHowToBuy" value="YOUR_ACTUAL_CONTRACT_ADDRESS_HERE_SOON" readonly class="w-full bg-slate-700 text-slate-100 border border-slate-600 rounded-lg p-3 pr-24 sm:pr-28 text-sm sm:text-base focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none selection:bg-amber-500 selection:text-slate-800">
-                                <button onclick="copyAddress('contractAddressHowToBuy', this)" class="absolute right-1.5 sm:right-2 btn-secondary px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold rounded-md">
-                                    Copy
-                                    <span class="copy-btn-feedback">Copied!</span>
-                                </button>
+                            <h3 class="text-xl md:text-2xl font-semibold text-white mb-2">Seek, Find, and Acquire ($DOOR)</h3>
+                            <p class="text-slate-400 text-base md:text-lg mb-3">Use the official $DOOR contract address (provided below for your convenience) to locate the token on pump.fun. Execute the swap of your SOL for $DOOR, and officially, welcome to the Dilemma!</p>
+                             <div class="mt-3 md:mt-4">
+                                <label for="contractAddressHowToBuy" class="block text-xs sm:text-sm font-medium text-slate-400 mb-1">$DOOR Contract Address:</label>
+                                <div class="relative flex items-center">
+                                    <input type="text" id="contractAddressHowToBuy" value="8fCoYT242eGZ2S6cGu23a21aWvWph4y1a2b3c4d5e6f7" readonly class="w-full bg-slate-700 text-slate-100 border border-slate-600 rounded-lg p-3 pr-24 sm:pr-28 text-sm sm:text-base focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none selection:bg-amber-500 selection:text-slate-800">
+                                    <button class="copy-button absolute right-1.5 sm:right-2 btn-secondary px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold rounded-md" data-target="contractAddressHowToBuy">
+                                        Copy
+                                        <span class="copy-btn-feedback">Copied!</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="community" class="py-20 md:py-28 px-4 section-bg-alt">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 animate-on-scroll">Enter the Chamber of <span class="text-amber-400">Chatter & Choice</span></h2>
-            <p class="text-xl text-slate-300 max-w-2xl mx-auto mb-12 animate-on-scroll" style="animation-delay: 0.2s;">Become an esteemed DoorDilemmist. Share your quandaries, your epiphanies, your most brilliant door-related puns. The community eagerly awaits your unique perspective and wit.</p>
-            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 md:space-x-6 mb-12 animate-on-scroll" style="animation-delay: 0.4s;">
-                <a href="https://x.com/YourTwitterHandle" target="_blank" rel="noopener noreferrer" class="social-btn twitter-x-btn w-full sm:w-auto">
-                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-                    <span>Join on X</span>
-                </a>
-                <a href="https://t.me/YourTelegramChannel" target="_blank" rel="noopener noreferrer" class="social-btn telegram-btn w-full sm:w-auto">
-                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M21.924 3.536a2.158 2.158 0 00-1.946-.953L2.953 6.852c-1.046.327-1.037 1.01.14 1.33l4.38 1.369 1.37 4.38c.32 1.177 1.003 1.186 1.33.14L17.15 2.953a2.158 2.158 0 00-.953-1.946zM5.99 8.92l9.19-5.69-7.09 7.09-2.1-1.4zm8.06 8.06l-1.4-2.1 7.09-7.09-5.69 9.19z" clip-rule="evenodd"></path></svg>
-                    <span>Join on Telegram</span>
-                </a>
+        <section id="community" class="py-20 md:py-28 px-4 section-bg-alt">
+            <div class="container mx-auto text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 animate-on-scroll">Enter the Chamber of <span class="text-amber-400">Chatter & Choice</span></h2>
+                <p class="text-xl text-slate-300 max-w-2xl mx-auto mb-12 animate-on-scroll" style="animation-delay: 0.2s;">Become an esteemed DoorDilemmist. Share your quandaries, your epiphanies, your most brilliant door-related puns. The community eagerly awaits your unique perspective and wit.</p>
+                
+                <!-- Button Container -->
+                <div class="flex flex-col items-center space-y-8 animate-on-scroll" style="animation-delay: 0.4s;">
+                    
+                    <!-- Social Buttons Grid -->
+                    <div class="max-w-md w-full mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a href="https://x.com/DoorDilemma" target="_blank" rel="noopener noreferrer" class="social-btn twitter-x-btn">
+                             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                            <span>Join on X</span>
+                        </a>
+                        <a href="https://t.me/DoorDilemma" target="_blank" rel="noopener noreferrer" class="social-btn telegram-btn">
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M21.924 3.536a2.158 2.158 0 00-1.946-.953L2.953 6.852c-1.046.327-1.037 1.01.14 1.33l4.38 1.369 1.37 4.38c.32 1.177 1.003 1.186 1.33.14L17.15 2.953a2.158 2.158 0 00-.953-1.946zM5.99 8.92l9.19-5.69-7.09 7.09-2.1-1.4zm8.06 8.06l-1.4-2.1 7.09-7.09-5.69 9.19z" clip-rule="evenodd"></path></svg>
+                            <span>Join on Telegram</span>
+                        </a>
+                    </div>
+        
+                    <!-- Revisit Button -->
+                    <a href="#hero" class="btn-primary px-8 sm:px-10 py-3 sm:py-4 text-lg sm:text-xl font-semibold rounded-xl shadow-xl">
+                        Revisit the First Door? (Back to Top)
+                    </a>
+                </div>
             </div>
-            <a href="#hero" class="btn-primary px-8 sm:px-10 py-3 sm:py-4 text-lg sm:text-xl font-semibold rounded-xl shadow-xl animate-on-scroll" style="animation-delay: 0.6s;">
-                Revisit the First Door? (Back to Top)
-            </a>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <footer class="py-16 px-4 bg-black/50 border-t border-slate-800/50">
         <div class="container mx-auto text-center text-slate-400">
@@ -713,433 +744,471 @@
         </div>
     </footer>
 
-    <button id="muteButton" title="Toggle Sound">
+    <button id="muteButton" title="Toggle Sound" aria-label="Toggle Sound">
         <svg id="speakerIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
         <svg id="mutedIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75L19.5 12m0 0L21.75 9.75M19.5 12L21.75 14.25M19.5 12L17.25 14.25M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
     </button>
 
     <script>
-        // --- СКРИПТЫ ИЗ ПРЕДЫДУЩЕЙ ВЕРСИИ С ИСПРАВЛЕНИЯМИ И ДОПОЛНЕНИЯМИ ---
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-                playSoundEffect(mobileMenu.classList.contains('hidden') ? 'swoosh' : 'click');
+    // --- Глобальный объект приложения для инкапсуляции логики ---
+    const App = {
+        // --- Свойства ---
+        config: {
+            isTouchDevice: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+            headerOffset: 0,
+        },
+        elements: {},
+        data: {
+            wisdoms: { 
+                door1: [
+                    "The path of least resistance often leads to the least interesting views. But hey, it's comfy!", "Not choosing IS a choice. A very meta one. $DOOR nods sagely.", "Door A confides: 'The real dilemma? What font to use for 'wisdom'.' We settled on Inter.", "Is it a door, or a metaphor for a door? The lines blur with $DOOR.", "They say every closed door is an opportunity. We say it's just... closed. For now. $DOOR.", "Open me, and you might find enlightenment. Or just a clever pun. $DOOR values both.", "This door leads to... well, that would be telling, wouldn't it? The mystery is part of the $DOOR charm.", "Contemplating this door? You're already halfway to becoming a true $DOOR Dilemmist.", "Some doors lead to riches, others to ruin. This one? It leads to more questions. $DOOR.", "The faint scent of aged parchment and indecision emanates from this door. Classic $DOOR."
+                ],
+                door2: [
+                    "To choose is to embrace one reality, while gently ghosting all others. Poetic, no? $DOOR.", "Door B philosophizes: 'Fortune favors the bold... and those who check the contract address twice.'", "A closed door holds infinite potential. An open $DOOR... slightly less, but tangible.", "They say curiosity opened the cat's door. We say $DOOR opens the connoisseur's.", "Behind this door lies either a brilliant idea or a terrible joke. The $DOOR spectrum.", "This door whispers secrets of the blockchain, if you listen closely. And hold enough $DOOR.", "The choice is yours: this door, or endless scrolling. $DOOR offers a third option: contemplate.", "What if this door leads to the friends we made along the way? Or just more $DOOR memes.", "This door is like a Schrödinger's cat of content: simultaneously amazing and mundane until opened. $DOOR.", "Legend has it, only the truly indecisive can unlock the full potential of this $DOOR."
+                ],
+                oracle: [
+                    "The Oracle Door muses: 'A classic quandary! Perhaps the answer lies not in the choice, but in the $DOOR token you hodl.'", "Fascinating dilemma. The Door's ancient gears whir... and suggest that true wisdom is knowing when to buy more $DOOR.", "The Oracle Door is currently recalibrating its whimsy. In the meantime, have you considered the profound implications of a well-timed $DOOR trade?", "Pondering... The most direct path to clarity often involves a detour through the $DOOR community. They have opinions.", "That's a pickle of philosophical proportions! The Door advises embracing the uncertainty. It's good for the $DOOR ecosystem.", "Consulting the cosmic doorknob... It seems to be pointing towards 'Diamond Hands' and a healthy dose of $DOOR.", "ERROR 404: Certainty not found in this dimension. Suggestion: Open a new $DOOR and see what happens.", "The Oracle Door cocks an eyebrow (if it had one). 'Is the answer A, B, or... $DOOR?'", "A truly perplexing choice. The Door feels a meme coming on. Or perhaps a significant $DOOR purchase.", "Let's not rush this. Good dilemmas, like good $DOOR charts, take time to develop."
+                ]
+            },
+            logoEmotions: [
+                { name: "neutral", left: { rotate: -10, scale: 1 }, right: { rotate: 10, scale: 1 } },
+                { name: "curious", left: { rotate: -8, scale: 1.05 }, right: { rotate: 8, scale: 1.05 } },
+                { name: "squint", left: { rotate: -12, scaleX: 1.05, scaleY: 0.8 }, right: { rotate: 12, scaleX: 1.05, scaleY: 0.8 } },
+                { name: "surprised", left: { rotate: -5, scale: 1.1 }, right: { rotate: 5, scale: 1.1 } }
+            ],
+            currentEmotionIndex: 0,
+            emotionChangeIntervalId: null
+        },
+
+        // --- Инициализация ---
+        init() {
+            this.cacheDOMElements();
+            this.setupEventListeners();
+            this.updateDynamicContent();
+            this.setupScrollAnimations();
+            this.createParticles();
+            this.heroLogo.init();
+            document.body.classList.add('loaded');
+        },
+
+        // --- Кэширование элементов DOM ---
+        cacheDOMElements() {
+            this.elements.header = document.getElementById('header');
+            this.elements.mobileMenuButton = document.getElementById('mobile-menu-button');
+            this.elements.mobileMenu = document.getElementById('mobile-menu');
+            this.elements.currentYear = document.getElementById('currentYear');
+            this.elements.animatedElements = document.querySelectorAll('.animate-on-scroll');
+            this.elements.particlesContainer = document.getElementById('particles-js-bg');
+            this.elements.interactiveDoors = document.querySelectorAll('.interactive-door');
+            this.elements.copyButtons = document.querySelectorAll('.copy-button');
+            // Oracle elements
+            this.elements.askOracleButton = document.getElementById('askOracleButton');
+            this.elements.userDilemmaInput = document.getElementById('userDilemma');
+            this.elements.oracleResponseDiv = document.getElementById('oracleResponse');
+            this.elements.shareOracleButton = document.getElementById('shareOracleResponse');
+        },
+
+        // --- Установка обработчиков событий ---
+        setupEventListeners() {
+            // Mobile Menu
+            this.elements.mobileMenuButton?.addEventListener('click', () => this.toggleMobileMenu());
+            
+            // Smooth Scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', (e) => this.handleSmoothScroll(e, anchor));
             });
-        }
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    const headerOffset = document.getElementById('header')?.offsetHeight || 0;
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            // Copy to Clipboard
+            this.elements.copyButtons.forEach(button => {
+                button.addEventListener('click', () => this.copyAddress(button));
+            });
 
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
+            // Interactive Doors
+            this.elements.interactiveDoors.forEach(door => {
+                door.addEventListener('click', () => this.toggleDoor(door));
+            });
 
-                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                    playSoundEffect('swoosh');
+            // Oracle
+            this.elements.askOracleButton?.addEventListener('click', () => this.queryOracle());
+            this.elements.shareOracleButton?.addEventListener('click', () => this.shareOracleResponse());
+
+            // General UI Sounds
+            document.querySelectorAll('button, a.btn-primary, a.btn-secondary, .social-btn, .wallet-btn, .exchange-btn').forEach(el => {
+                if (el.id !== 'muteButton') {
+                    el.addEventListener('click', () => AudioManager.playSound('click'));
                 }
             });
-        });
-        
-        const currentYearEl = document.getElementById('currentYear');
-        if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+        },
 
-        function copyAddress(elementId, buttonElement) {
-            const inputElement = document.getElementById(elementId);
-            if (!inputElement) return;
-            inputElement.select();
-            inputElement.setSelectionRange(0, 99999);
-            try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(inputElement.value)
-                    .then(() => { showCopyFeedback(buttonElement); playSoundEffect('click'); })
-                    .catch(err => { fallbackCopyTextToClipboard(inputElement.value, buttonElement); });
-                } else {
-                    fallbackCopyTextToClipboard(inputElement.value, buttonElement);
-                }
-            } catch (err) { console.error("Copy address error:", err); }
-        }
-
-        function fallbackCopyTextToClipboard(text, buttonElement) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            Object.assign(textArea.style, { top: "0", left: "0", position: "fixed", opacity: "0" });
-            document.body.appendChild(textArea);
-            textArea.focus(); textArea.select();
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) { showCopyFeedback(buttonElement); playSoundEffect('click'); }
-            } catch (err) { console.error('Fallback copy error', err); }
-            document.body.removeChild(textArea);
-        }
-
-        function showCopyFeedback(buttonElement) {
-            const feedbackElement = buttonElement.querySelector('.copy-btn-feedback');
-            if (feedbackElement) {
-                feedbackElement.classList.add('show');
-                setTimeout(() => { feedbackElement.classList.remove('show'); }, 2200);
+        // --- Обновление динамического контента ---
+        updateDynamicContent() {
+            if (this.elements.currentYear) {
+                this.elements.currentYear.textContent = new Date().getFullYear();
             }
-        }
+            this.config.headerOffset = this.elements.header?.offsetHeight || 0;
+        },
 
-        let isMuted = false;
-        const sounds = {};
+        // --- Логика UI ---
+        toggleMobileMenu() {
+            this.elements.mobileMenu.classList.toggle('hidden');
+            AudioManager.playSound(this.elements.mobileMenu.classList.contains('hidden') ? 'swoosh' : 'click');
+        },
 
-        function initSound(name, url, volume, fadeOut = 0.1) {
-             return new Promise((resolve) => { 
-                try {
-                    sounds[name] = new Tone.Player({ url, fadeOut }).toDestination();
-                    sounds[name].volume.value = volume;
-                    sounds[name].buffer.onload = resolve; 
-                    sounds[name].onerror = (e) => { console.error(`${name} sound load error:`, e); resolve(); }; 
-                } catch (e) {
-                     console.error(`Error initializing sound ${name}: `, e); resolve(); 
+        handleSmoothScroll(e, anchor) {
+            e.preventDefault();
+            const targetId = anchor.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - this.config.headerOffset;
+
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+
+                if (!this.elements.mobileMenu.classList.contains('hidden')) {
+                    this.elements.mobileMenu.classList.add('hidden');
                 }
-            });
-        }
-        
-        const synthSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.4, sustain: 0.05, release: 0.2 } }).toDestination();
-        if(synthSound) synthSound.volume.value = -22;
+                AudioManager.playSound('swoosh');
+            }
+        },
 
-        const shimmerSynth = new Tone.PolySynth(Tone.Synth, {
-            oscillator: { type: "triangle8" }, 
-            envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.05 },
-            volume: -25 
-        }).toDestination();
-         const noiseSynth = new Tone.NoiseSynth({
-            noise: { type: 'white' },
-            envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.05 },
-            volume: -35
-        }).toDestination();
+        copyAddress(buttonElement) {
+            const targetId = buttonElement.dataset.target;
+            const inputElement = document.getElementById(targetId);
+            if (!inputElement) return;
 
+            // Select the text field
+            inputElement.select();
+            inputElement.setSelectionRange(0, 99999); // For mobile devices
 
-        Promise.all([
-            initSound('click', "https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/examples/audio/berklee/SideStick. لائحة.mp3", -10),
-            initSound('swoosh', "https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/examples/audio/FWDL.เถอะ.mp3", -15, 0.3),
-            initSound('door_creak', "https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/examples/audio/door_creak.mp3", -8, 0.2),
-            initSound('door_close', "https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/examples/audio/drum-samples/loops/clave.mp3", -12, 0.15),
-            initSound('oracle_reveal', "https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/examples/audio/casio/C2.mp3", -18, 0.5),
-            initSound('portal_sparkle', "https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/examples/audio/berklee/Analucia%20Arp.mp3", -28, 0.3) 
-        ]).then(() => { console.log("Audio samples loading process initiated."); });
-
-        const muteButton = document.getElementById('muteButton');
-        const speakerIcon = document.getElementById('speakerIcon');
-        const mutedIcon = document.getElementById('mutedIcon');
-
-        async function playSoundEffect(type, noteDetails = {}) {
-            if (isMuted && type !== 'unmute_click_sound') return;
-            if (Tone.context.state !== 'running') { try { await Tone.start(); } catch(e){ console.warn("Tone.start() failed, audio might not play.", e); return;} }
-            
             try {
-                if (sounds[type] && sounds[type].loaded) {
-                    sounds[type].start(Tone.now(), noteDetails.offset || 0, noteDetails.duration);
-                } else if (type === 'oracle_thinking' && synthSound) {
-                    const now = Tone.now();
-                    synthSound.triggerAttackRelease(noteDetails.note1 || "C3", noteDetails.duration || "16n", now);
-                    synthSound.triggerAttackRelease(noteDetails.note2 || "G2", noteDetails.duration || "16n", now + 0.15);
-                    synthSound.triggerAttackRelease(noteDetails.note3 || "Eb3", noteDetails.duration || "16n", now + 0.3);
-                } else if (type === 'crystal_sparkle' && shimmerSynth) { 
-                    shimmerSynth.triggerAttackRelease(["C5", "E5", "G5"], "32n", Tone.now());
-                } else if (type === 'portal_open_subtle' && sounds['portal_sparkle'] && sounds['portal_sparkle'].loaded) { 
-                     sounds['portal_sparkle'].start(Tone.now(), 0, 0.5); 
-                } else if (type === 'digital_hum' && noiseSynth) {
-                    noiseSynth.triggerAttackRelease("64n");
-                }
-            } catch (error) { console.error("Error playing sound:", type, error); }
-        }
-        
-        if (muteButton && speakerIcon && mutedIcon) {
-            muteButton.addEventListener('click', () => {
-                isMuted = !isMuted;
-                Tone.Destination.mute = isMuted;
-                speakerIcon.classList.toggle('hidden', isMuted);
-                mutedIcon.classList.toggle('hidden', !isMuted);
-                muteButton.setAttribute('title', isMuted ? 'Unmute Sound' : 'Mute Sound');
-                if (!isMuted) { playSoundEffect('click', {type: 'unmute_click_sound'}); }
-            });
-        }
-
-        document.querySelectorAll('button, a.btn-primary, a.btn-secondary').forEach(el => {
-            if (el.id === 'muteButton' || el.closest('#mobile-menu')) return;
-             el.addEventListener('click', () => playSoundEffect('click'));
-        });
-        document.querySelectorAll('#mobile-menu a').forEach(el => {
-             el.addEventListener('click', () => {
-                if (el.getAttribute('href') && el.getAttribute('href').startsWith('#')) playSoundEffect('swoosh');
-                else playSoundEffect('click');
-            });
-        });
-        
-        document.querySelectorAll('.wallet-btn').forEach(btn => {
-            btn.addEventListener('mouseenter', () => playSoundEffect('crystal_sparkle'));
-        });
-        document.querySelectorAll('.exchange-btn').forEach(btn => {
-            btn.addEventListener('mouseenter', () => playSoundEffect('portal_open_subtle')); 
-        });
-         document.querySelectorAll('.social-btn').forEach(btn => {
-            btn.addEventListener('mouseenter', () => playSoundEffect('digital_hum'));
-        });
-
-
-        const animatedElements = document.querySelectorAll('.animate-on-scroll');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animated');
-                }
-            });
-        }, { threshold: 0.15 });
-        animatedElements.forEach(el => observer.observe(el));
-
-        // --- Hero Logo Emotion and Tracking Logic ---
-        const heroLogoContainer = document.getElementById('heroLogoContainer');
-        const heroLogoDoor = document.getElementById('heroLogoDoor');
-        const heroPupilLeft = document.getElementById('heroPupilLeft');
-        const heroPupilRight = document.getElementById('heroPupilRight');
-        const heroEyeLeft = document.getElementById('heroEyeLeft');
-        const heroEyeRight = document.getElementById('heroEyeRight');
-        const customCursorDot = document.getElementById('cursorDot');
-        const heroSection = document.getElementById('hero');
-
-        const baseEyeParams = {
-            left: { rotate: -10, scaleX: 1, scaleY: 1, translateY: '-50%' },
-            right: { rotate: 10, scaleX: 1, scaleY: 1, translateY: '-50%' }
-        };
-
-        const logoEmotions = [
-            { name: "neutral", left: { rotate: -10, scale: 1 }, right: { rotate: 10, scale: 1 } },
-            { name: "curious", left: { rotate: -8, scale: 1.05 }, right: { rotate: 8, scale: 1.05 } },
-            { name: "squint", left: { rotate: -12, scaleX: 1.05, scaleY: 0.8 }, right: { rotate: 12, scaleX: 1.05, scaleY: 0.8 } },
-            { name: "surprised", left: { rotate: -5, scale: 1.1 }, right: { rotate: 5, scale: 1.1 } },
-            { name: "thinking_left", left: { rotate: -15, scale: 0.95 }, right: { rotate: 5, scale: 1 } }, 
-            { name: "thinking_right", left: { rotate: -5, scale: 1 }, right: { rotate: 15, scale: 0.95 } }, 
-            { name: "wide_awake", left: { rotate: -7, scale: 1.12 }, right: { rotate: 7, scale: 1.12 } } 
-        ];
-        let currentEmotionIndex = 0; 
-        let emotionChangeIntervalId = null; // Initialize as null
-
-        function updateEyeTransforms(proximityFactor = 0) {
-            if (!heroEyeLeft || !heroEyeRight) return;
-
-            const currentEmotion = logoEmotions[currentEmotionIndex];
-            
-            const additionalScale = proximityFactor * 0.08; 
-            const additionalRotation = proximityFactor * 4; 
-
-            let baseLeftRotate = currentEmotion.left.rotate !== undefined ? currentEmotion.left.rotate : baseEyeParams.left.rotate;
-            let baseLeftScaleX = currentEmotion.left.scaleX !== undefined ? currentEmotion.left.scaleX : (currentEmotion.left.scale !== undefined ? currentEmotion.left.scale : baseEyeParams.left.scaleX);
-            let baseLeftScaleY = currentEmotion.left.scaleY !== undefined ? currentEmotion.left.scaleY : (currentEmotion.left.scale !== undefined ? currentEmotion.left.scale : baseEyeParams.left.scaleY);
-            
-            heroEyeLeft.style.transform = `translateY(${baseEyeParams.left.translateY}) rotate(${baseLeftRotate + additionalRotation}deg) scaleX(${baseLeftScaleX + additionalScale}) scaleY(${baseLeftScaleY + additionalScale})`;
-
-            let baseRightRotate = currentEmotion.right.rotate !== undefined ? currentEmotion.right.rotate : baseEyeParams.right.rotate;
-            let baseRightScaleX = currentEmotion.right.scaleX !== undefined ? currentEmotion.right.scaleX : (currentEmotion.right.scale !== undefined ? currentEmotion.right.scale : baseEyeParams.right.scaleX);
-            let baseRightScaleY = currentEmotion.right.scaleY !== undefined ? currentEmotion.right.scaleY : (currentEmotion.right.scale !== undefined ? currentEmotion.right.scale : baseEyeParams.right.scaleY);
-
-            heroEyeRight.style.transform = `translateY(${baseEyeParams.right.translateY}) rotate(${baseRightRotate - additionalRotation}deg) scaleX(${baseRightScaleX + additionalScale}) scaleY(${baseRightScaleY + additionalScale})`;
-        }
-
-
-        function changeEmotion() {
-            const previousEmotionIndex = currentEmotionIndex;
-            do {
-                currentEmotionIndex = Math.floor(Math.random() * logoEmotions.length);
-            } while (logoEmotions.length > 1 && currentEmotionIndex === previousEmotionIndex);
-            
-            updateEyeTransforms(0); 
-        }
-
-        if (heroLogoContainer && heroLogoDoor && heroPupilLeft && heroPupilRight && heroEyeLeft && heroEyeRight && customCursorDot && heroSection) {
-            // Set initial base emotion transforms directly via JS, ensuring CSS transitions don't interfere with this base state
-            const initialEmotion = logoEmotions[currentEmotionIndex];
-            heroEyeLeft.style.transform = `translateY(${baseEyeParams.left.translateY}) rotate(${initialEmotion.left.rotate}deg) scaleX(${initialEmotion.left.scaleX || initialEmotion.left.scale}) scaleY(${initialEmotion.left.scaleY || initialEmotion.left.scale})`;
-            heroEyeRight.style.transform = `translateY(${baseEyeParams.right.translateY}) rotate(${initialEmotion.right.rotate}deg) scaleX(${initialEmotion.right.scaleX || initialEmotion.right.scale}) scaleY(${initialEmotion.right.scaleY || initialEmotion.right.scale})`;
-
-
-            heroSection.addEventListener('mouseenter', () => {
-                customCursorDot.style.opacity = '1';
-                if (emotionChangeIntervalId === null) { // Start only if not already running
-                    changeEmotion(); // Change emotion immediately on first enter
-                    emotionChangeIntervalId = setInterval(changeEmotion, 7000); 
-                }
-            });
-            heroSection.addEventListener('mouseleave', () => {
-                customCursorDot.style.opacity = '0';
-                heroLogoDoor.style.transform = 'rotateX(0deg) rotateY(0deg)';
-                if(heroPupilLeft) heroPupilLeft.style.transform = 'translate(0px, 0px)'; 
-                if(heroPupilRight) heroPupilRight.style.transform = 'translate(0px, 0px)';
-                updateEyeTransforms(0); 
-                // Optional: if you want emotions to stop changing when mouse leaves hero
-                // clearInterval(emotionChangeIntervalId);
-                // emotionChangeIntervalId = null;
-            });
-
-            heroSection.addEventListener('mousemove', (e) => {
-                customCursorDot.style.left = e.clientX + 'px';
-                customCursorDot.style.top = e.clientY + 'px';
-
-                const rect = heroLogoContainer.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                const tiltX = (y / (rect.height / 2)) * -5; 
-                const tiltY = (x / (rect.width / 2)) * 5;  
-                heroLogoDoor.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-
-                function trackPupil(pupilEl, eyeEl) {
-                    if(!pupilEl || !eyeEl) return;
-                    const eyeBoundingRect = eyeEl.getBoundingClientRect(); 
-                    const eyeCenterX = eyeBoundingRect.left + eyeBoundingRect.width / 2;
-                    const eyeCenterY = eyeBoundingRect.top + eyeBoundingRect.height / 2; 
-                    
-                    const deltaX = e.clientX - eyeCenterX;
-                    const deltaY = e.clientY - eyeCenterY;
-                    const angle = Math.atan2(deltaY, deltaX);
-                    const maxPupilTravel = eyeEl.offsetWidth * 0.18; 
-                    
-                    const pupilX = Math.cos(angle) * maxPupilTravel;
-                    const pupilY = Math.sin(angle) * maxPupilTravel;
-                    pupilEl.style.transform = `translate(${pupilX}px, ${pupilY}px)`;
-                }
+                // Copy the text inside the text field using the fallback method
+                document.execCommand('copy');
                 
-                trackPupil(heroPupilLeft, heroEyeLeft);
-                trackPupil(heroPupilRight, heroEyeRight);
+                // Show feedback
+                const feedbackElement = buttonElement.querySelector('.copy-btn-feedback');
+                if (feedbackElement) {
+                    feedbackElement.classList.add('show');
+                    setTimeout(() => feedbackElement.classList.remove('show'), 2200);
+                }
+                AudioManager.playSound('click');
 
-                const distToLogoCenter = Math.sqrt(x*x + y*y);
-                const maxDist = Math.sqrt(Math.pow(rect.width/2, 2) + Math.pow(rect.height/2, 2));
-                const proximityFactor = 1 - Math.min(distToLogoCenter / (maxDist * 0.8), 1); 
-                
-                updateEyeTransforms(proximityFactor);
-            });
-        }
-        
-        const particlesContainer = document.getElementById('particles-js-bg');
-        if (particlesContainer) {
-            const numParticles = Math.min(Math.floor(window.innerWidth / 50), 30); 
+            } catch (err) {
+                console.error('Oops, unable to copy', err);
+            }
+            
+            // Deselect the text
+            if (window.getSelection) {
+                window.getSelection().removeAllRanges();
+            } else if (document.selection) {
+                document.selection.empty();
+            }
+        },
+
+        // --- Анимации и эффекты ---
+        setupScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                    }
+                });
+            }, { threshold: 0.15 });
+            this.elements.animatedElements.forEach(el => observer.observe(el));
+        },
+
+        createParticles() {
+            if (!this.elements.particlesContainer) return;
+            const numParticles = Math.min(Math.floor(window.innerWidth / 50), 30);
             for (let i = 0; i < numParticles; i++) {
                 let particle = document.createElement('div');
-                particle.classList.add('particle');
-                const size = Math.random() * 5 + 2; 
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.animationDuration = `${Math.random() * 15 + 10}s`; 
-                particle.style.animationDelay = `${Math.random() * -20}s`; 
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        const doors = [document.getElementById('door1'), document.getElementById('door2')];
-        const wisdoms = { 
-            door1: [
-                "The path of least resistance often leads to the least interesting views. But hey, it's comfy!", "Not choosing IS a choice. A very meta one. $DOOR nods sagely.", "Door A confides: 'The real dilemma? What font to use for 'wisdom'.' We settled on Inter.", "Is it a door, or a metaphor for a door? The lines blur with $DOOR.", "They say every closed door is an opportunity. We say it's just... closed. For now. $DOOR.", "Open me, and you might find enlightenment. Or just a clever pun. $DOOR values both.", "This door leads to... well, that would be telling, wouldn't it? The mystery is part of the $DOOR charm.", "Contemplating this door? You're already halfway to becoming a true $DOOR Dilemmist.", "Some doors lead to riches, others to ruin. This one? It leads to more questions. $DOOR.", "The faint scent of aged parchment and indecision emanates from this door. Classic $DOOR.", "Perhaps what's behind this door is less important than the act of choosing to open it. Or not. $DOOR.", "This door has seen things. Mostly people staring at it, wondering. The $DOOR life.", "Is this the right door? Is any door truly 'right'? $DOOR ponders these deep existential crises.", "This door might contain the secret to eternal happiness. Or a discount code for $DOOR merch. 50/50.", "A wise man once said, 'Knock, and the $DOOR shall be opened unto you.' Or was that something else?", "Caution: May contain traces of irony and a strong urge to check $DOOR price.", "This door feels... contemplative. It's probably thinking about $DOOR.", "Knock twice for 'yes', once for 'no', or just buy $DOOR and forget the dilemma.", "What lies beyond? Uncertainty. And $DOOR. Mostly $DOOR.", "The architect of this door was clearly a $DOOR maximalist.", "This door is currently undergoing philosophical maintenance. Please try $DOOR later.", "To open or not to open? That is the $DOOR. (Shakespeare was a HODLer).", "This door has a 50% chance of containing a rubber chicken. And a 100% chance of being $DOOR-related.", "Think of this door as a $DOOR call option on your curiosity.", "The silence behind this door is deafening. Or is it just the $DOOR chart loading?", "This door is like a mystery box, but the prize is always more $DOOR thoughts.", "Step right up, choose a $DOOR! No wrong answers, only different shades of dilemma.", "This door leads to a rabbit hole. A $DOOR-lined rabbit hole.", "Is it a door to another dimension, or just another $DOOR meme? You decide.", "This door is feeling a bit shy. Maybe some $DOOR encouragement will help?"
-            ],
-            door2: [
-                "To choose is to embrace one reality, while gently ghosting all others. Poetic, no? $DOOR.", "Door B philosophizes: 'Fortune favors the bold... and those who check the contract address twice.'", "A closed door holds infinite potential. An open $DOOR... slightly less, but tangible.", "They say curiosity opened the cat's door. We say $DOOR opens the connoisseur's.", "Behind this door lies either a brilliant idea or a terrible joke. The $DOOR spectrum.", "This door whispers secrets of the blockchain, if you listen closely. And hold enough $DOOR.", "The choice is yours: this door, or endless scrolling. $DOOR offers a third option: contemplate.", "What if this door leads to the friends we made along the way? Or just more $DOOR memes.", "This door is like a Schrödinger's cat of content: simultaneously amazing and mundane until opened. $DOOR.", "Legend has it, only the truly indecisive can unlock the full potential of this $DOOR.", "Choosing this door might change your life. Or it might just change your current browser tab. $DOOR.", "If a door opens in a forest and no one is around to see it, is it still a dilemma? $DOOR asks the real questions.", "This door represents the path not taken. Unless you take it. Then it's the path taken. $DOOR logic.", "Warning: Opening this door may lead to an uncontrollable desire to use the word '$DOOR' in every sentence.", "The Oracle Door itself designed this choice. Or did it? The dilemma deepens. $DOOR.", "This door is sponsored by the $DOOR Foundation for Advanced Procrastination.", "This door has 'buy $DOOR' subtly engraved on its hinges. Or does it?", "If you stare long enough into the $DOOR, the $DOOR stares also into you.", "This door might lead to the moon. Or just a very detailed $DOOR chart analysis.", "The key to this door is acceptance. Acceptance that $DOOR is the answer.", "This door has a certain je ne sais $DOOR.", "Open this door if you dare to confront... your own impeccable taste in $DOOR.", "This door is not like the other doors. It's a $DOOR door.", "The Aura of this door suggests high $DOOR emissions.", "Behind this door: more $DOOR. Surprise!", "This door has been rigorously tested by a team of professional $DOOR HODLers.", "Do not taunt the $DOOR. Or this door. Or any door, really.", "This door is silently judging your portfolio. It hopes to see more $DOOR.", "The wisdom of this door is directly proportional to the amount of $DOOR you own.", "This door is actually a portal to the $DOOR Discord. Just kidding... or are we?"
-            ]
-        };
-        
-        function getRandomWisdom(doorId) {
-            const wisdomArray = wisdoms[doorId];
-            return wisdomArray[Math.floor(Math.random() * wisdomArray.length)];
-        }
-
-        doors.forEach(door => {
-            if(!door) return; 
-            door.addEventListener('click', () => {
-                const otherDoor = doors.find(d => d && d !== door);
-                
-                if (otherDoor && otherDoor.classList.contains('open')) {
-                    otherDoor.classList.remove('open');
-                    playSoundEffect('door_close'); 
-                }
-                
-                const isOpen = door.classList.toggle('open');
-                playSoundEffect(isOpen ? 'door_creak' : 'door_close');
-
-                if (isOpen) {
-                    const wisdomElement = door.querySelector(`#${door.id}-wisdom`);
-                    if(wisdomElement) wisdomElement.textContent = getRandomWisdom(door.id);
-                }
-            });
-        });
-
-        const askOracleButton = document.getElementById('askOracleButton');
-        const userDilemmaInput = document.getElementById('userDilemma');
-        const oracleResponseDiv = document.getElementById('oracleResponse');
-        const shareOracleButton = document.getElementById('shareOracleResponse');
-        
-        const placeholderOracleResponses = [
-            "The Oracle Door muses: 'A classic quandary! Perhaps the answer lies not in the choice, but in the $DOOR token you hodl.'", "Fascinating dilemma. The Door's ancient gears whir... and suggest that true wisdom is knowing when to buy more $DOOR.", "The Oracle Door is currently recalibrating its whimsy. In the meantime, have you considered the profound implications of a well-timed $DOOR trade?", "Pondering... The most direct path to clarity often involves a detour through the $DOOR community. They have opinions.", "That's a pickle of philosophical proportions! The Door advises embracing the uncertainty. It's good for the $DOOR ecosystem.", "Consulting the cosmic doorknob... It seems to be pointing towards 'Diamond Hands' and a healthy dose of $DOOR.", "ERROR 404: Certainty not found in this dimension. Suggestion: Open a new $DOOR and see what happens.", "The Oracle Door cocks an eyebrow (if it had one). 'Is the answer A, B, or... $DOOR?'", "A truly perplexing choice. The Door feels a meme coming on. Or perhaps a significant $DOOR purchase.", "Let's not rush this. Good dilemmas, like good $DOOR charts, take time to develop.", "The Oracle Door senses a disturbance in the Force... of indecision. This is bullish for $DOOR.", "Ah, the eternal dance of 'what if'. The Door recommends 'what if you bought $DOOR earlier?'", "Such questions require deep contemplation. And possibly a Twitter poll. Tag $DOOR.", "The Oracle Door feels your pain. And your potential for $DOOR gains.", "To be, or not to be... decisive? That is the $DOOR question.", "The Oracle Door suggests a nap. Great insights often come when one is not actively seeking them. Or after a $DOOR rally.", "Consider this: which choice makes for a better story at the next $DOOR holders' anonymous meeting?", "The winds of fate are fickle, much like the early price action of a promising memecoin. $DOOR understands.", "This dilemma has layers, like an onion, or a particularly complex smart contract. The Oracle Door advises peeling them back, with $DOOR.", "Flip a coin. If it lands on its edge, buy $DOOR. If heads, buy $DOOR. If tails... also buy $DOOR. The Oracle has spoken (sort of).", "The Oracle Door is experiencing unusually high traffic. Please HODL your dilemma and try again after the next $DOOR tweet.", "Sometimes the best answer is the one that makes you chuckle. Or the one that involves $DOOR. Ideally both.", "Let's reframe: What would the most indecisive person in history do? Then do the opposite. Or just accumulate $DOOR.", "The Oracle Door is powered by pure, unadulterated 'maybe'. Your query fits right in. $DOOR.", "Is there a $DOOR option? If not, are you sure you're asking the right question?", "This requires the kind of wisdom only found at the bottom of a $DOOR whitepaper. Or a good cup of coffee.", "The Oracle Door feels a surge of... something. Probably just gas fees. Or the impending $DOOR pump.", "Interesting. The Oracle Door recommends consulting the $DOOR/SOL chart for divine inspiration.", "A choice is but a path taken. A $DOOR token is a path... tokenized. Profound, no?", "The Oracle Door has seen many dilemmas. Yours is... adequately perplexing. $DOOR.",
-            "The Oracle intones: 'Seek not the answer, but the $DOOR that leads to more questions.'", "My hinges creak with ancient wisdom... or they just need oil. Either way, consider $DOOR.", "To truly understand your dilemma, one must first understand the liquidity pool of $DOOR. Deep, isn't it?", "The Oracle is currently processing... a large order of $DOOR. Please hold.", "Some say the best decisions are made on a full stomach. Others say with a full $DOOR bag.", "If your dilemma were a crypto chart, would it be a bull flag or a bearish pennant? The Oracle Door sees... potential for $DOOR.", "Let the serenity of HODLing $DOOR guide your choice. Or just flip a coin, whatever.", "The Oracle Door has a strict 'no spoilers' policy. But $DOOR is always a good bet.", "This is a tough one. The Oracle recommends a strategic pause, perhaps while admiring the $DOOR logo.", "My wood grain whispers... 'buy the dip'. Not financial advice, just ancient timber talk. $DOOR.", "The Oracle Door's crystal ball is cloudy... possibly from too much FUD. Cleanse your portfolio with $DOOR.", "If in doubt, consult the $DOOR whitepaper. Or the stars. Or me. I'm good too.", "The path to enlightenment is paved with... well, many things. Some of them might be $DOOR tokens.", "Ah, a conundrum worthy of the finest minds! The Oracle Door suggests... a committee meeting. With $DOOR holders.", "Consider the butterfly effect. Your choice here could lead to... a slightly different $DOOR price. Maybe.", "The Oracle Door's Magic 8-Ball says... 'Ask $DOOR community'.", "This dilemma is like a choose-your-own-adventure book, but all paths lead to $DOOR.", "The Oracle is feeling generous. The answer is... 42. Or $DOOR. Probably $DOOR.", "Let's approach this with the calm rationality of a seasoned degen. $DOOR first, questions later.", "The Oracle Door is not a financial advisor, but it has a good feeling about $DOOR.", "Some choices define us. Others are just... choices. This one? It screams '$DOOR opportunity'.", "If this dilemma were a door, what kind of wood would it be? Ponder that, then buy $DOOR.", "The Oracle Door's internal RNG (Random Number Generator) suggests... a random act of $DOOR kindness.", "This requires a level of wisdom usually reserved for those who have read the $DOOR smart contract. Twice.", "The Oracle Door advises against overthinking. Unless you're overthinking how much $DOOR to buy.", "Sometimes, the only winning move is not to play... unless the game is 'Accumulate $DOOR'. Then play hard.", "The Oracle's gears are grinding... This dilemma is complex. Like trying to time the $DOOR bottom perfectly.", "Let the spirit of indecision guide you. It's the $DOOR way.", "The Oracle Door is currently AFK (Away From Keyhole). Try asking the $DOOR chart.", "This is a real head-scratcher. The Oracle Door suggests you might need more $DOOR to unlock the answer.", "If a tree falls in the forest and no one hears it, did the $DOOR price move? The Oracle ponders.", "The answer, my friend, is blowin' in the wind... or perhaps hidden in the $DOOR Telegram.", "This dilemma is spicy! The Oracle Door recommends a glass of water and a deep breath. Then, $DOOR.", "The Oracle Door's core programming dictates: 'When in doubt, $DOOR it out.'", "Let's be pragmatic. Which option allows for more time to stare at $DOOR charts?", "The Oracle senses great potential... for you to acquire more $DOOR.", "This is a classic 'damned if you do, $DOOR if you don't' situation.", "The Oracle Door suggests you consult your inner child. They usually have good (and whimsical) advice about $DOOR.", "If this were a test, the answer would be C. C for 'Contemplate $DOOR'.", "The Oracle Door is not saying it's aliens... but it's probably not *not* aliens. And they'd likely HODL $DOOR.", "This dilemma is beyond the Oracle's current processing power. Please upgrade to $DOOR Premium for an answer.", "The stars align to say... something vague. But the $DOOR community is usually more direct.", "Let your intuition be your guide. And let $DOOR be your companion on the journey.", "The Oracle Door has a hunch... this dilemma will resolve itself once $DOOR hits a new ATH.", "Is it fate? Is it destiny? Is it... time to buy more $DOOR? The Oracle winks.", "This is a question for the ages. Or at least until the next $DOOR AMA.", "The Oracle Door is feeling a bit indecisive itself today. Try asking about $DOOR instead.", "Consider all possibilities. Then choose the one that involves the most $DOOR.", "The Oracle Door recommends a balanced approach: a little bit of wisdom, a little bit of humor, and a lot of $DOOR.", "This dilemma is like a locked door. $DOOR might be the key you're looking for.", "The Oracle Door has spoken... or rather, creaked thoughtfully. The answer is probably $DOOR.", "To find the answer, look within... your $DOOR wallet.", "The Oracle Door believes in you. And in the long-term potential of $DOOR.", "This dilemma is a puzzle. The missing piece? Likely $DOOR.", "The Oracle Door is running on low battery. Please insert $DOOR to continue.", "Let's not make a mountain out of a molehill. Unless the mountain is made of $DOOR.", "The Oracle Door suggests a moment of quiet reflection. Or a quick scroll through the $DOOR X feed.", "This is a situation that calls for... a bold move. Like buying a significant amount of $DOOR.", "The Oracle Door's wisdom is vast, but its patience for non-$DOOR related queries is limited.", "Sometimes, the best path is the one you create yourself. With $DOOR as your foundation.", "The Oracle Door is all about embracing the unknown. And $DOOR.", "This dilemma is a journey, not a destination. Enjoy the ride, with $DOOR.", "The Oracle Door is intrigued. This requires further study... and more $DOOR data.", "If you listen carefully, the $DOOR chart itself might whisper the answer.", "The Oracle Door's final thought: When life gives you dilemmas, make $DOORade.", "Consider the path of maximalist $DOOR HODLing. It often simplifies things.", "The Oracle's wisdom is like a fine wine, or a well-aged $DOOR meme. It gets better with time.", "Is this a trick question? The answer is always $DOOR, isn't it?", "The Oracle Door is currently in a meditative state, contemplating the true meaning of $DOOR.", "Let's be honest, you probably already know the answer. But buying more $DOOR couldn't hurt.", "This dilemma is as complex as the $DOOR tokenomics. (Just kidding, ours are simple!)", "The Oracle Door has a dream... a dream where every dilemma is solved by $DOOR.", "Seek balance, young Dilemmist. Balance your choices with a healthy allocation of $DOOR.", "The Oracle Door is not easily stumped, but this one... this one might require a community vote. And $DOOR rewards.", "Remember, every choice you make is a reflection of your inner $DOOR.", "The Oracle Door feels a cosmic alignment. It's a good time to... well, you know. $DOOR."
-        ];
-        
-
-        if(askOracleButton && userDilemmaInput && oracleResponseDiv && shareOracleButton) {
-            askOracleButton.addEventListener('click', () => {
-                const userQuery = userDilemmaInput.value.trim();
-                playSoundEffect('click');
-                
-                oracleResponseDiv.textContent = "The Oracle Door is delving into the cosmic datastream...";
-                oracleResponseDiv.classList.add('thinking');
-                shareOracleButton.classList.add('hidden');
-                shareOracleButton.classList.remove('visible');
-                playSoundEffect('oracle_thinking', {note1: "D3", note2: "A2", note3: "F3"});
-
-                setTimeout(() => {
-                    oracleResponseDiv.classList.remove('thinking');
-                    let responseText = "";
-                    if (userQuery === "") {
-                        responseText = "The Oracle Door can't ponder silence. Bestow upon it your dilemma!";
-                    } else {
-                        responseText = placeholderOracleResponses[Math.floor(Math.random() * placeholderOracleResponses.length)];
-                    }
-                    oracleResponseDiv.textContent = responseText;
-                    playSoundEffect('oracle_reveal'); 
-                    
-                    if (userQuery !== "") {
-                         shareOracleButton.classList.remove('hidden');
-                         shareOracleButton.classList.add('visible');
-                    }
-                }, 2000); 
-            });
-
-            shareOracleButton.addEventListener('click', () => {
-                const oracleText = oracleResponseDiv.textContent;
-                const userQueryText = userDilemmaInput.value.trim();
-                let tweetText = `The Oracle Door at #DoorDilemma ($DOOR) pondered my dilemma`;
-                if (userQueryText) {
-                    tweetText += ` ("${userQueryText}")`;
-                }
-                tweetText += ` and said: "${oracleText}" What will your $DOOR open?`;
-
-                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(window.location.href)}`;
-                window.open(twitterUrl, '_blank');
-                playSoundEffect('click');
-            });
-        }
-
-        // Responsiveness adjustments for interactive doors
-        function adjustInteractiveDoors() {
-            const doors = document.querySelectorAll('.interactive-door');
-            if (window.innerWidth < 640) { // sm breakpoint
-                doors.forEach(door => {
-                    // Further reduce size or adjust layout if needed for very small screens
+                particle.className = 'particle';
+                const size = Math.random() * 5 + 2;
+                Object.assign(particle.style, {
+                    width: `${size}px`,
+                    height: `${size}px`,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDuration: `${Math.random() * 15 + 10}s`,
+                    animationDelay: `${Math.random() * -20}s`,
                 });
+                this.elements.particlesContainer.appendChild(particle);
+            }
+        },
+
+        // --- Интерактивные элементы ---
+        toggleDoor(door) {
+            const otherDoor = Array.from(this.elements.interactiveDoors).find(d => d && d !== door);
+            if (otherDoor?.classList.contains('open')) {
+                otherDoor.classList.remove('open');
+                AudioManager.playSound('door_close');
+            }
+            
+            const isOpen = door.classList.toggle('open');
+            AudioManager.playSound(isOpen ? 'door_creak' : 'door_close');
+
+            if (isOpen) {
+                const wisdomElement = door.querySelector(`#${door.id}-wisdom`);
+                if (wisdomElement) {
+                    wisdomElement.textContent = this.getRandomItem(this.data.wisdoms[door.id]);
+                }
+            }
+        },
+
+        queryOracle() {
+            const userQuery = this.elements.userDilemmaInput.value.trim();
+            AudioManager.playSound('click');
+            
+            this.elements.oracleResponseDiv.textContent = "The Oracle Door is delving into the cosmic datastream...";
+            this.elements.oracleResponseDiv.classList.add('thinking');
+            this.elements.shareOracleButton.classList.remove('visible');
+            this.elements.askOracleButton.disabled = true;
+            AudioManager.playSound('oracle_thinking');
+
+            setTimeout(() => {
+                this.elements.oracleResponseDiv.classList.remove('thinking');
+                this.elements.askOracleButton.disabled = false;
+                let responseText = (userQuery === "") 
+                    ? "The Oracle Door can't ponder silence. Bestow upon it your dilemma!"
+                    : this.getRandomItem(this.data.wisdoms.oracle);
+                
+                this.elements.oracleResponseDiv.textContent = responseText;
+                AudioManager.playSound('oracle_reveal');
+                
+                if (userQuery !== "") {
+                    this.elements.shareOracleButton.classList.add('visible');
+                }
+            }, 2000);
+        },
+
+        shareOracleResponse() {
+            const oracleText = this.elements.oracleResponseDiv.textContent;
+            const userQueryText = this.elements.userDilemmaInput.value.trim();
+            let tweetText = `The Oracle Door at #DoorDilemma ($DOOR) pondered my dilemma`;
+            if (userQueryText) tweetText += ` ("${userQueryText}")`;
+            tweetText += ` and said: "${oracleText}" What will your $DOOR open?`;
+
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(window.location.href)}`;
+            window.open(twitterUrl, '_blank');
+            AudioManager.playSound('click');
+        },
+
+        // --- Вспомогательные функции ---
+        getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        },
+
+        // --- Модуль: Интерактивный логотип ---
+        heroLogo: {
+            elements: {},
+            baseEyeParams: {
+                left: { rotate: -10, scaleX: 1, scaleY: 1, translateY: '-50%' },
+                right: { rotate: 10, scaleX: 1, scaleY: 1, translateY: '-50%' }
+            },
+            
+            init() {
+                this.cacheElements();
+                if (!this.elements.container || App.config.isTouchDevice) return;
+                this.setupEventListeners();
+                this.setInitialEmotion();
+            },
+
+            cacheElements() {
+                this.elements.container = document.getElementById('heroLogoContainer');
+                this.elements.door = document.getElementById('heroLogoDoor');
+                this.elements.pupilLeft = document.getElementById('heroPupilLeft');
+                this.elements.pupilRight = document.getElementById('heroPupilRight');
+                this.elements.eyeLeft = document.getElementById('heroEyeLeft');
+                this.elements.eyeRight = document.getElementById('heroEyeRight');
+                this.elements.cursorDot = document.getElementById('cursorDot');
+                this.elements.heroSection = document.getElementById('hero');
+            },
+
+            setupEventListeners() {
+                this.elements.heroSection.addEventListener('mouseenter', () => this.onMouseEnter());
+                this.elements.heroSection.addEventListener('mouseleave', () => this.onMouseLeave());
+                this.elements.heroSection.addEventListener('mousemove', (e) => this.onMouseMove(e));
+            },
+
+            onMouseEnter() {
+                this.elements.cursorDot.style.opacity = '1';
+                if (App.data.emotionChangeIntervalId === null) {
+                    this.changeEmotion();
+                    App.data.emotionChangeIntervalId = setInterval(() => this.changeEmotion(), 7000);
+                }
+            },
+
+            onMouseLeave() {
+                this.elements.cursorDot.style.opacity = '0';
+                this.elements.door.style.transform = 'rotateX(0deg) rotateY(0deg)';
+                this.elements.pupilLeft.style.transform = 'translate(0px, 0px)';
+                this.elements.pupilRight.style.transform = 'translate(0px, 0px)';
+                this.updateEyeTransforms(0);
+                clearInterval(App.data.emotionChangeIntervalId);
+                App.data.emotionChangeIntervalId = null;
+            },
+
+            onMouseMove(e) {
+                this.elements.cursorDot.style.left = e.clientX + 'px';
+                this.elements.cursorDot.style.top = e.clientY + 'px';
+
+                const rect = this.elements.container.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                // Tilt door
+                this.elements.door.style.transform = `rotateX(${(y / (rect.height / 2)) * -5}deg) rotateY(${(x / (rect.width / 2)) * 5}deg)`;
+                
+                // Move pupils
+                this.trackPupil(this.elements.pupilLeft, this.elements.eyeLeft, e);
+                this.trackPupil(this.elements.pupilRight, this.elements.eyeRight, e);
+
+                // Adjust eyes based on proximity
+                const distToCenter = Math.sqrt(x*x + y*y);
+                const maxDist = Math.sqrt(Math.pow(rect.width/2, 2) + Math.pow(rect.height/2, 2));
+                const proximityFactor = 1 - Math.min(distToCenter / (maxDist * 0.8), 1);
+                this.updateEyeTransforms(proximityFactor);
+            },
+
+            trackPupil(pupilEl, eyeEl, event) {
+                const eyeRect = eyeEl.getBoundingClientRect();
+                const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+                const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+                const deltaX = event.clientX - eyeCenterX;
+                const deltaY = event.clientY - eyeCenterY;
+                const angle = Math.atan2(deltaY, deltaX);
+                const maxTravel = eyeEl.offsetWidth * 0.18;
+                pupilEl.style.transform = `translate(${Math.cos(angle) * maxTravel}px, ${Math.sin(angle) * maxTravel}px)`;
+            },
+
+            updateEyeTransforms(proximityFactor = 0) {
+                const emotion = App.data.logoEmotions[App.data.currentEmotionIndex];
+                const scale = proximityFactor * 0.08;
+                const rot = proximityFactor * 4;
+
+                const applyTransform = (el, baseParams, emotionParams) => {
+                    let baseRot = emotionParams.rotate ?? baseParams.rotate;
+                    let baseScaleX = emotionParams.scaleX ?? emotionParams.scale ?? baseParams.scaleX;
+                    let baseScaleY = emotionParams.scaleY ?? emotionParams.scale ?? baseParams.scaleY;
+                    el.style.transform = `translateY(${baseParams.translateY}) rotate(${baseRot + rot}deg) scaleX(${baseScaleX + scale}) scaleY(${baseScaleY + scale})`;
+                };
+
+                applyTransform(this.elements.eyeLeft, this.baseEyeParams.left, emotion.left);
+                applyTransform(this.elements.eyeRight, this.baseEyeParams.right, emotion.right);
+            },
+
+            changeEmotion() {
+                const prevIndex = App.data.currentEmotionIndex;
+                do {
+                    App.data.currentEmotionIndex = Math.floor(Math.random() * App.data.logoEmotions.length);
+                } while (App.data.logoEmotions.length > 1 && App.data.currentEmotionIndex === prevIndex);
+                this.updateEyeTransforms(0);
+            },
+
+            setInitialEmotion() {
+                this.updateEyeTransforms(0);
             }
         }
-        window.addEventListener('resize', adjustInteractiveDoors);
-        adjustInteractiveDoors(); // Initial call
+    };
+
+    // --- Менеджер звука ---
+    const AudioManager = {
+        isMuted: false,
+        synths: {},
+        
+        async init() {
+            this.elements = {
+                muteButton: document.getElementById('muteButton'),
+                speakerIcon: document.getElementById('speakerIcon'),
+                mutedIcon: document.getElementById('mutedIcon'),
+            };
+
+            this.elements.muteButton?.addEventListener('click', () => this.toggleMute());
+
+            // Инициализация всех звуков через синтезаторы для надежности
+            this.synths.click = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 6, oscillator: { type: "sine" }, envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.2 } }).toDestination();
+            this.synths.click.volume.value = -18;
+            
+            this.synths.oracle_thinking = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.4, sustain: 0.05, release: 0.2 } }).toDestination();
+            this.synths.oracle_thinking.volume.value = -22;
+
+            this.synths.oracle_reveal = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.02, decay: 0.5, sustain: 0.2, release: 0.8 } }).toDestination();
+            this.synths.oracle_reveal.volume.value = -18;
+            
+            this.synths.swoosh = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.01, decay: 0.3, sustain: 0 } }).toDestination();
+            this.synths.swoosh.volume.value = -15;
+
+            this.synths.door_creak = new Tone.FMSynth({
+                harmonicity: 1.01,
+                modulationIndex: 14,
+                envelope: { attack: 0.2, decay: 0.3, sustain: 0.1, release: 1.2 },
+                modulation: { type: "sine" },
+                modulationEnvelope: { attack: 0.01, decay: 0.5, sustain: 0.2, release: 0.1 }
+            }).toDestination();
+            this.synths.door_creak.volume.value = -15;
+
+            this.synths.door_close = new Tone.MembraneSynth({ pitchDecay: 0.08, octaves: 2, oscillator: { type: "sine" }, envelope: { attack: 0.001, decay: 0.5, sustain: 0.01, release: 0.3 } }).toDestination();
+            this.synths.door_close.volume.value = -10;
+            
+            console.log("Audio Manager Initialized with synthesized sounds.");
+        },
+
+        async playSound(type) {
+            if (this.isMuted) return;
+            if (Tone.context.state !== 'running') {
+                try { await Tone.start(); } catch(e) { console.warn("Audio context not started."); return; }
+            }
+            
+            try {
+                const now = Tone.now();
+                const synth = this.synths[type];
+                if (!synth) return;
+
+                switch(type) {
+                    case 'click':
+                        synth.triggerAttackRelease("C2", "8n", now);
+                        break;
+                    case 'oracle_thinking':
+                        synth.triggerAttackRelease("D3", "16n", now);
+                        synth.triggerAttackRelease("A2", "16n", now + 0.15);
+                        synth.triggerAttackRelease("F3", "16n", now + 0.3);
+                        break;
+                    case 'oracle_reveal':
+                        synth.triggerAttackRelease("C5", "0.5", now);
+                        break;
+                    case 'swoosh':
+                        synth.triggerAttackRelease("0.3");
+                        break;
+                    case 'door_creak':
+                        synth.triggerAttack("G2", now);
+                        synth.frequency.rampTo("G#2", 0.8, now);
+                        synth.triggerRelease(now + 0.8);
+                        break;
+                    case 'door_close':
+                        synth.triggerAttackRelease("C1", "8n", now);
+                        break;
+                }
+            } catch (error) {
+                console.error(`Error playing sound: ${type}`, error);
+            }
+        },
+
+        toggleMute() {
+            this.isMuted = !this.isMuted;
+            this.elements.speakerIcon?.classList.toggle('hidden', this.isMuted);
+            this.elements.mutedIcon?.classList.toggle('hidden', !this.isMuted);
+            this.elements.muteButton?.setAttribute('title', this.isMuted ? 'Unmute Sound' : 'Mute Sound');
+            if(Tone.Destination.mute !== this.isMuted) {
+               Tone.Destination.mute = this.isMuted;
+            }
+            if (!this.isMuted) this.playSound('click');
+        }
+    };
+
+    // --- Запуск приложения ---
+    document.addEventListener('DOMContentLoaded', () => {
+        App.init();
+        AudioManager.init();
+    });
 
     </script>
 </body>
